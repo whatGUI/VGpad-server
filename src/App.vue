@@ -1,15 +1,51 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <h1>VGpad 服务端应用</h1>
+  <h3>使用手机浏览器扫描二维码连接此服务器</h3>
+  <QrCode :value="getQRCodeValue"></QrCode>
+  <div>服务器地址：{{ serverIP[selectedIP] }}:{{ port }}</div>
+  <span>或选择其他网络接口：</span>
+  <select v-model="selectedIP">
+    <option v-for="(i, index) in serverIP" :key="index" :value="index">{{ i }}</option>
+  </select>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import QrCode from "./components/QrCode.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    QrCode
+  },
+  data() {
+    return {
+      serverIP: [],
+      port: process.env.VUE_APP_EXPRESS_PORT,
+      selectedIP: 0,
+    }
+  },
+  mounted() {
+    this.getServerIP();
+  },
+  computed: {
+    getQRCodeValue() {
+      return `http://${this.serverIP[this.selectedIP]}:${this.port}`
+    }
+  },
+  methods: {
+    getServerIP() {
+      window.ipcRenderer.invoke("get-server-ip").then((data) => {
+        let ipList = []
+        data.forEach(ip => {
+          if(ip.includes("192.168")){
+            ipList.unshift(ip)
+          }else{
+            ipList.push(ip)
+          }
+        });
+        this.serverIP = ipList
+      })
+    },
   }
 }
 </script>
@@ -21,6 +57,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 20px 0;
 }
 </style>
