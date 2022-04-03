@@ -23,6 +23,8 @@ module.exports = function startAllServer() {
     console.log(`This app listening on port ${port}`);
   });
   server.on("error", (e) => {
+    // 检测端口是否占用
+    // Check if the port is occupied
     if (e.code === "EADDRINUSE") {
       console.log("Address in use, retrying...");
       setTimeout(() => {

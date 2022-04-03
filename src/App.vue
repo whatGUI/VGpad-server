@@ -36,6 +36,7 @@ export default {
     getServerIP() {
       window.ipcRenderer.invoke("get-server-ip").then((data) => {
         let ipList = []
+        // 将IP地址排序，首选192.168开头的ip
         data.forEach(ip => {
           if(ip.includes("192.168")){
             ipList.unshift(ip)

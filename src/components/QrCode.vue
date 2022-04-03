@@ -17,7 +17,3 @@ export default {
   components: {QrcodeVue},
 }
 </script>
-
-<style scoped>
-
-</style>
