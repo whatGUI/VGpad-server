@@ -63,6 +63,7 @@ function closeUdpServer() {
     console.log("UDP server closed");
   });
   controllers.forEach((c) => c.disconnect());
+  controllers = [];
 }
 
 module.exports = { startUdpServer, closeUdpServer };
