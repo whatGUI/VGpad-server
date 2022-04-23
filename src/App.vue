@@ -1,52 +1,34 @@
 <template>
-  <h1>VGpad 服务端应用</h1>
-  <h3>使用手机浏览器扫描二维码连接此服务器</h3>
-  <QrCode :value="getQRCodeValue"></QrCode>
-  <div>服务器地址：{{ serverIP[selectedIP] }}:{{ port }}</div>
-  <span>或选择其他网络接口：</span>
-  <select v-model="selectedIP">
-    <option v-for="(i, index) in serverIP" :key="index" :value="index">{{ i }}</option>
-  </select>
+  <component :is="currentPage"></component>
+  <button class="switch-btn" @click="switchLink">{{ switchBtnText }}</button>
 </template>
 
 <script>
-import QrCode from "./components/QrCode.vue";
+import QrcodeLink from "./pages/QrcodeLink.vue";
+import UdpLink from "./pages/UdpLink.vue";
 
 export default {
   name: 'App',
   components: {
-    QrCode
+    QrcodeLink,
+    UdpLink
   },
   data() {
     return {
-      serverIP: [],
-      port: process.env.VUE_APP_EXPRESS_PORT,
-      selectedIP: 0,
-    }
-  },
-  mounted() {
-    this.getServerIP();
-  },
-  computed: {
-    getQRCodeValue() {
-      return `http://${this.serverIP[this.selectedIP]}:${this.port}`
+      currentPage: 'UdpLink',
+      switchBtnText: '切换到使用H5页面'
     }
   },
   methods: {
-    getServerIP() {
-      window.ipcRenderer.invoke("get-server-ip").then((data) => {
-        let ipList = []
-        // 将IP地址排序，首选192.168开头的ip
-        data.forEach(ip => {
-          if(ip.includes("192.168")){
-            ipList.unshift(ip)
-          }else{
-            ipList.push(ip)
-          }
-        });
-        this.serverIP = ipList
-      })
-    },
+    switchLink() {
+      if (this.currentPage === 'QrcodeLink') {
+        this.currentPage = 'UdpLink'
+        this.switchBtnText = '切换到使用H5页面'
+      } else {
+        this.currentPage = 'QrcodeLink'
+        this.switchBtnText = '切换到使用微信小程序页面'
+      }
+    }
   }
 }
 </script>
@@ -59,5 +41,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin: 20px 0;
+}
+
+.switch-btn {
+  outline: 0;
 }
 </style>

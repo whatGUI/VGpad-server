@@ -1,7 +1,7 @@
-// 
+//
 // 定义所有按钮及摇杆的功能和虚拟控制器的操作交互
 // Define all buttons and axes functions
-// 
+//
 
 module.exports = class VGamepad {
   constructor(controller) {
@@ -11,6 +11,10 @@ module.exports = class VGamepad {
   getInfo() {
     console.log("Index:", this.controller.index);
     console.log("User index:", this.controller.userIndex);
+  }
+
+  disconnect() {
+    this.controller.disconnect();
   }
 
   // buttons
@@ -113,4 +117,4 @@ module.exports = class VGamepad {
     this.controller.axis.rightX.setValue(x);
     this.controller.axis.rightY.setValue(y);
   }
-}
+};

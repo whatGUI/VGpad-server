@@ -8,5 +8,11 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     if (validChannels.includes(channel)) {
       return ipcRenderer.invoke(channel, data)
     }
+  },
+  send: (channel, data) => {
+    let validChannels = ['start-server','close-server']
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data)
+    }
   }
 })

@@ -4,7 +4,8 @@ import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import path from "path";
 import { networkInterfaces } from "os";
-import startAllServer from "./express/server";
+import { startWebServer, closeWebServer } from "./express/server";
+import { startUdpServer, closeUdpServer } from "./udpServe/index";
 // import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -13,11 +14,12 @@ protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
 ]);
 
+let win = null;
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
-    width: 400,
-    height: 550,
+  win = new BrowserWindow({
+    width: 410,
+    height: 560,
     autoHideMenuBar: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -38,6 +40,21 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
+}
+
+// Lock single instance
+// 保持单实例运行
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
 }
 
 // Quit when all windows are closed.
@@ -67,9 +84,8 @@ app.on("ready", async () => {
     //     console.error('Vue Devtools failed to install:', e.toString())
     //   }
   }
-  // Start server
-  startAllServer();
   createWindow();
+  // process.on('warning', e => console.warn(e.stack));
 });
 
 // Exit cleanly on request from parent process in development mode.
@@ -94,6 +110,22 @@ if (isDevelopment) {
 ipcMain.handle("get-server-ip", () => {
   const result = getIPAddress();
   return result;
+});
+
+ipcMain.on("start-server", (event, type) => {
+  if (type === "udp") {
+    startUdpServer();
+  } else if (type === "websocket") {
+    startWebServer();
+  }
+});
+
+ipcMain.on("close-server", (event, type) => {
+  if (type === "udp") {
+    closeUdpServer();
+  } else if (type === "websocket") {
+    closeWebServer();
+  }
 });
 
 function getIPAddress() {
