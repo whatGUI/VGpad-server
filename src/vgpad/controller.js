@@ -34,6 +34,14 @@ module.exports = class VGamepad {
     this.controller.button.RIGHT_SHOULDER.setValue(value);
   }
 
+  LEFT_THUMB(value){
+    this.controller.button.LEFT_THUMB.setValue(value);
+  }
+
+  RIGHT_THUMB(value){
+    this.controller.button.RIGHT_THUMB.setValue(value);
+  }
+
   A(value) {
     this.controller.button.A.setValue(value);
   }
