@@ -4,8 +4,8 @@ import { app, protocol, BrowserWindow, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import path from "path";
 import { networkInterfaces } from "os";
-import { startWebServer, closeWebServer } from "./express/server";
-import { startUdpServer, closeUdpServer } from "./udpServe/index";
+import { startWebServer, closeWebServer } from "./network/express/server";
+import { startUdpServer, closeUdpServer } from "./network/udpServe/index";
 // import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== "production";
 

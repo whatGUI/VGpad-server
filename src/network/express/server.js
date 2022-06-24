@@ -3,7 +3,7 @@ const history = require("connect-history-api-fallback");
 const path = require("path");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const startSocketIO = require("../vgpad/index");
+const startSocketIO = require("../websocketServe/index");
 
 const port = process.env.VUE_APP_EXPRESS_PORT;
 // eslint-disable-next-line no-undef

@@ -1,5 +1,5 @@
-const addController = require("./ViGEmClient");
-const VGamepad = require("./controller");
+const addController = require("../../vcontroller/ViGEmClient");
+const VGamepad = require("../../vcontroller/controller");
 
 function startSocketIO(io) {
   // 连接计数，最多4个

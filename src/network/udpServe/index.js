@@ -1,6 +1,6 @@
 const dgram = require("dgram");
-const addController = require("../vgpad/ViGEmClient");
-const VGamepad = require("../vgpad/controller");
+const addController = require("../../vcontroller/ViGEmClient");
+const VGamepad = require("../../vcontroller/controller");
 
 let server;
 const port = process.env.VUE_APP_UDP_PORT;
